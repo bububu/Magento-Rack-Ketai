@@ -78,7 +78,8 @@ class Rack_Ketai_CheckoutController extends Mage_Checkout_Controller_Action
         $this->_getCheckout()->getCheckoutSession()->setCheckoutState(
             Mage_Checkout_Model_Session::CHECKOUT_STATE_BEGIN
         );
-        $this->_redirect('*/*/billing');
+        //$this->_redirect('*/*/billing');
+        $this->_redirect('*/*/login');
     }
 
     /**

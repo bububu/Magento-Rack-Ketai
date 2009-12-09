@@ -376,26 +376,27 @@ class Rack_Ketai_Model_Type_Ketai extends Mage_Checkout_Model_Type_Onepage
 
         $this->validateOrder();
         $billing = $this->getQuote()->getBillingAddress();
+        
         if (!$this->getQuote()->isVirtual()) {
             $shipping = $this->getQuote()->getShippingAddress();
         }
         switch ($this->getQuote()->getCheckoutMethod()) {
-        case Mage_Sales_Model_Quote::CHECKOUT_METHOD_GUEST:
-            if (!$this->getQuote()->isAllowedGuestCheckout()) {
-                Mage::throwException(Mage::helper('checkout')->__('Sorry, guest checkout is not enabled. Please try again or contact store owner.'));
-            }
-            $this->getQuote()->setCustomerId(null)
-                ->setCustomerEmail($billing->getEmail())
-                ->setCustomerIsGuest(true)
-                ->setCustomerGroupId(Mage_Customer_Model_Group::NOT_LOGGED_IN_ID);
-            break;
+            case Mage_Sales_Model_Quote::CHECKOUT_METHOD_GUEST:
+                if (!$this->getQuote()->isAllowedGuestCheckout()) {
+                    Mage::throwException(Mage::helper('checkout')->__('Sorry, guest checkout is not enabled. Please try again or contact store owner.'));
+                }
+                $this->getQuote()->setCustomerId(null)
+                    ->setCustomerEmail($billing->getEmail())
+                    ->setCustomerIsGuest(true)
+                    ->setCustomerGroupId(Mage_Customer_Model_Group::NOT_LOGGED_IN_ID);
+                break;
 
-        case Mage_Sales_Model_Quote::CHECKOUT_METHOD_REGISTER:
-            $customer = Mage::getModel('customer/customer');
-            /* @var $customer Mage_Customer_Model_Customer */
-
-            $customerBilling = $billing->exportCustomerAddress();
-            $customer->addAddress($customerBilling);
+            case Mage_Sales_Model_Quote::CHECKOUT_METHOD_REGISTER:
+                $customer = Mage::getModel('customer/customer');
+                /* @var $customer Mage_Customer_Model_Customer */
+                
+                $customerBilling = $billing->exportCustomerAddress();
+                $customer->addAddress($customerBilling);
 
             if (!$this->getQuote()->isVirtual() && !$shipping->getSameAsBilling()) {
                 $customerShipping = $shipping->exportCustomerAddress();
