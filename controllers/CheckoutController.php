@@ -88,7 +88,7 @@ class Rack_Ketai_CheckoutController extends Mage_Checkout_Controller_Action
     public function loginAction()
     {
         if (Mage::getSingleton('customer/session')->isLoggedIn()) {
-            $this->_redirect('*/*/');
+            $this->_redirect('*/*/billing');
             return;
         }
 
