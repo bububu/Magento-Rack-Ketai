@@ -1,6 +1,7 @@
 <?php
 /**
  * Shopping cart controller
+ *
  */
 class Rack_Ketai_CartController extends Mage_Core_Controller_Front_Action
 {

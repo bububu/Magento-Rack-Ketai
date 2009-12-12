@@ -78,7 +78,6 @@ class Rack_Ketai_CheckoutController extends Mage_Checkout_Controller_Action
         $this->_getCheckout()->getCheckoutSession()->setCheckoutState(
             Mage_Checkout_Model_Session::CHECKOUT_STATE_BEGIN
         );
-        //$this->_redirect('*/*/billing');
         $this->_redirect('*/*/login');
     }
 
@@ -175,6 +174,7 @@ class Rack_Ketai_CheckoutController extends Mage_Checkout_Controller_Action
         $this->_initLayoutMessages('customer/session');
         $this->_initLayoutMessages('checkout/session');
         $this->renderLayout();
+        Mage::getSingleton('checkout/session')->clear();
     }
 
     public function shippingPostAction()
