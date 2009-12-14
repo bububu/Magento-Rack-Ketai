@@ -114,7 +114,8 @@ class Rack_Ketai_Model_Url extends Mage_Core_Model_Url
                 else {
                     $this->setQueryParam('___SID', 'U');
                 }
-                $this->setQueryParam($session->getSessionIdQueryParam(), SID);                
+
+                $this->setQueryParam($session->getSessionIdQueryParam(), session_id());                
                 break;
             default:
                 if (!$this->getUseSession()) {
