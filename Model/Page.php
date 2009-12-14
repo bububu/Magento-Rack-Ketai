@@ -6,7 +6,7 @@ class Kdl_Ketai_Model_Page extends Mage_Core_Model_Abstract
 
     const NOROUTE_PAGE_ID = 'no-route';
 
-    protected $_eventPrefix = 'kdl_ketai_page';
+    protected $_eventPrefix = 'rack_ketai_page';
 
     protected function _construct()
     {

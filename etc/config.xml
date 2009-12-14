@@ -11,7 +11,8 @@
             </ketai>
             <core>
                  <rewrite>
-                      <design_package>Rack_Ketai_Model_Design</design_package>
+                     <design_package>Rack_Ketai_Model_Design</design_package>
+                     <cookie>Rack_Ketai_Model_Cookie</cookie>
                  </rewrite>
             </core>
         </models>
