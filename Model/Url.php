@@ -12,13 +12,6 @@ class Rack_Ketai_Model_Url extends Mage_Core_Model_Url
     {
         $escapeQuery = false;
         
-        $error = error_reporting(E_ALL);
-        $include_path = get_include_path();
-        set_include_path($include_path . PS . BP . DS . 'lib/PEAR');
-        require_once('Net/UserAgent/Mobile.php');
-        
-        $agent = Net_UserAgent_Mobile::singleton();
-
         /**
          * All system params should be unseted before we call getRouteUrl
          * this method has condition for ading default controller anr actions names
@@ -60,20 +53,13 @@ class Rack_Ketai_Model_Url extends Mage_Core_Model_Url
             }
         }
 
-        
-        switch(true)
-        {
-            case ($agent->isDocomo()) :
-            case ($agent->isVodafone()) :
-            case ($agent->isEzweb()) :
-                error_reporting($error);
+        $agent = Mage::helper('ketai/agent');
+        if (!$agent->getCookieEnable()) {
+            $this->_prepareSessionUrl($url);
+        } else {
+            if ($noSid !== true ) {
                 $this->_prepareSessionUrl($url);
-                break;
-            default:
-                if ($noSid !== true) {
-                    $this->_prepareSessionUrl($url);
-                }
-                break;
+            }
         }
 
         if ($query = $this->getQuery($escapeQuery)) {
@@ -95,50 +81,39 @@ class Rack_Ketai_Model_Url extends Mage_Core_Model_Url
      */
     protected function _prepareSessionUrl($url)
     {
-        $error = error_reporting(E_ALL);
-        $include_path = get_include_path();
-        set_include_path($include_path . PS . BP . DS . 'lib/PEAR');
-        require_once('Net/UserAgent/Mobile.php');
-        
-        $agent = Net_UserAgent_Mobile::singleton();
-        switch(true)
-        {
-            case ($agent->isDocomo()) :
-            case ($agent->isVodafone()) :
-            case ($agent->isEzweb()) :
-                error_reporting($error);
-                $session = Mage::getSingleton('core/session');
+        $agent = Mage::helper('ketai/agent');
+
+        if ( !$agent->getCookieEnable()) {
+            $session = Mage::getSingleton('core/session');
+            if ($this->getSecure()) {
+                $this->setQueryParam('___SID', 'S');
+            }
+            else {
+                $this->setQueryParam('___SID', 'U');
+            }
+
+            $this->setQueryParam($session->getSessionIdQueryParam(), session_id());                
+        } else {
+            if (!$this->getUseSession()) {
+                return $this;
+            }
+
+            $session = Mage::getSingleton('core/session');
+            /* @var $session Mage_Core_Model_Session */
+            if (Mage::app()->getUseSessionVar()) {
+                // secure URL
                 if ($this->getSecure()) {
                     $this->setQueryParam('___SID', 'S');
                 }
                 else {
                     $this->setQueryParam('___SID', 'U');
                 }
-
-                $this->setQueryParam($session->getSessionIdQueryParam(), session_id());                
-                break;
-            default:
-                if (!$this->getUseSession()) {
-                    return $this;
+            }
+            else {
+                if ($sessionId = $session->getSessionIdForHost($url)) {
+                    $this->setQueryParam($session->getSessionIdQueryParam(), $sessionId);
                 }
-        
-                $session = Mage::getSingleton('core/session');
-                /* @var $session Mage_Core_Model_Session */
-                if (Mage::app()->getUseSessionVar()) {
-                    // secure URL
-                    if ($this->getSecure()) {
-                        $this->setQueryParam('___SID', 'S');
-                    }
-                    else {
-                        $this->setQueryParam('___SID', 'U');
-                    }
-                }
-                else {
-                    if ($sessionId = $session->getSessionIdForHost($url)) {
-                        $this->setQueryParam($session->getSessionIdQueryParam(), $sessionId);
-                    }
-                }
-                break;
+             }    
         }
         return $this;
     }
