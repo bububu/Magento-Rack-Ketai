@@ -1,11 +1,4 @@
 <?php
-/**
- * Catalog navigation
- *
- * @category   Mage
- * @package    Mage_Catalog
- * @author      Magento Core Team <core@magentocommerce.com>
- */
 class Rack_Ketai_Block_Catalog_Navigation extends Mage_Catalog_Block_Navigation
 {
     /**
@@ -22,42 +15,13 @@ class Rack_Ketai_Block_Catalog_Navigation extends Mage_Catalog_Block_Navigation
         if (!$category->getIsActive()) {
             return $html;
         }
-        if (Mage::helper('catalog/category_flat')->isEnabled()) {
-            $children = $category->getChildrenNodes();
-            $childrenCount = count($children);
+        if(!$last) {
+            $html .= '┗';
         } else {
-            $children = $category->getChildren();
-            $childrenCount = $children->count();
-        }
-        $hasChildren = $children && $childrenCount;
-        $html.= '<li';
-        if ($hasChildren) {
-             $html.= ' onmouseover="toggleMenu(this,1)" onmouseout="toggleMenu(this,0)"';
-        }
+            $html .= '┣';
+        }    
+        $html.= '<a href="'.$this->getCategoryUrl($category).'"><span>'.$this->htmlEscape($category->getName()).'</span></a><br/>';
 
-        $html.= ' class="level'.$level;
-        $html.= ' nav-'.str_replace('/', '-', Mage::helper('catalog/category')->getCategoryUrlPath($category->getRequestPath()));
-        if ($this->isCategoryActive($category)) {
-            $html.= ' active';
-        }
-        if ($last) {
-            $html .= ' last';
-        }
-        if ($hasChildren) {
-            $cnt = 0;
-            foreach ($children as $child) {
-                if ($child->getIsActive()) {
-                    $cnt++;
-                }
-            }
-            if ($cnt > 0) {
-                $html .= ' parent';
-            }
-        }
-        $html.= '">'."\n";
-        $html.= '<a href="'.$this->getCategoryUrl($category).'"><span>'.$this->htmlEscape($category->getName()).'</span></a>'."\n";
-
-        $html.= '</li>'."\n";
         return $html;
     }
 }
