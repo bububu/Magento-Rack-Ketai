@@ -7,7 +7,7 @@ class Rack_Ketai_Helper_Agent
     public function __construct()
     {
         $uri = Mage::app()->getRequest();
-        if(preg_match("/extensions_custom/i", $uri->getRequestUri())) {
+        if(preg_match("/extensions_(custom|local)/i", $uri->getRequestUri())) {
             $this->_isAdmin = true;
         }
         if(!$this->_isAdmin){
