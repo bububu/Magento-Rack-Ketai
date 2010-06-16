@@ -1,6 +1,6 @@
 <?php
 
-class Kdl_Ketai_Model_Catalog_Design extends Mage_Catalog_Model_Design
+class Rack_Ketai_Model_Catalog_Design extends Mage_Catalog_Model_Design
 {
     const APPLY_FOR_PRODUCT     = 1;
     const APPLY_FOR_CATEGORY    = 2;
